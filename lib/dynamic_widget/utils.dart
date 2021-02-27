@@ -33,7 +33,7 @@ TextAlign parseTextAlign(String textAlignString) {
 }
 
 String exportTextAlign(TextAlign textAlign) {
-  String rt = "start";
+  String rt;
   if (textAlign == TextAlign.left) {
     rt = "left";
   }
@@ -74,13 +74,21 @@ TextOverflow parseTextOverflow(String textOverflowString) {
 }
 
 String exportTextOverflow(TextOverflow textOverflow) {
-  String rt = "ellipsis";
+  String rt;
   if (textOverflow == TextOverflow.clip) {
     rt = "clip";
   }
 
   if (textOverflow == TextOverflow.fade) {
     rt = "fade";
+  }
+
+  if (textOverflow == TextOverflow.ellipsis) {
+    rt = "ellipsis";
+  }
+
+  if (textOverflow == TextOverflow.visible) {
+    rt = "visible";
   }
   return rt;
 }
@@ -105,7 +113,7 @@ TextDecoration parseTextDecoration(String textDecorationString) {
 }
 
 String exportTextDecoration(TextDecoration decoration) {
-  var rt = "none";
+  var rt;
   if (decoration == TextDecoration.lineThrough) {
     rt = "lineThrough";
   }
@@ -251,22 +259,28 @@ TextStyle parseTextStyle(Map<String, dynamic> map) {
   );
 }
 
+void exportToMap(Map<String, dynamic> map, String key, dynamic value) {
+  if (value == null) {
+    return;
+  }
+  map[key] = value;
+}
+
 Map<String, dynamic> exportTextStyle(TextStyle textStyle) {
   if (textStyle == null) {
     return null;
   }
 
-  return <String, dynamic>{
-    "color": textStyle.color != null
-        ? textStyle.color.value.toRadixString(16)
-        : null,
-    "debugLabel": textStyle.debugLabel,
-    "decoration": exportTextDecoration(textStyle.decoration),
-    "fontSize": textStyle.fontSize,
-    "fontFamily": textStyle.fontFamily,
-    "fontStyle": FontStyle.italic == textStyle.fontStyle ? "italic" : "normal",
-    "fontWeight": exportFontWeight(textStyle.fontWeight),
-  };
+  var ret = <String, dynamic>{};
+  exportToMap(ret, "color", textStyle.color?.value?.toRadixString(16));
+  exportToMap(ret, "debugLabel", textStyle.debugLabel);
+  exportToMap(ret, "decoration", exportTextDecoration(textStyle.decoration));
+  exportToMap(ret, "fontSize", textStyle.fontSize);
+  exportToMap(ret, "fontFamily", textStyle.fontFamily);
+  exportToMap(ret, "fontStyle",
+      textStyle.fontStyle == FontStyle.italic ? "italic" : null);
+  exportToMap(ret, "fontWeight", exportFontWeight(textStyle.fontWeight));
+  return ret;
 }
 
 Map<String, dynamic> alignmentEnumMap = {
@@ -291,6 +305,9 @@ Map<String, dynamic> alignmentEnumMap = {
 };
 
 AlignmentGeometry parseAlignment(String alignmentString) {
+  if (alignmentString == null) {
+    return AlignmentDirectional.topStart;
+  }
   var a = alignmentEnumMap[alignmentString];
   if (a != null) {
     return a;

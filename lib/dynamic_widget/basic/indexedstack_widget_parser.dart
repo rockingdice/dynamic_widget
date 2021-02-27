@@ -8,9 +8,7 @@ class IndexedStackWidgetParser extends WidgetParser {
       ClickListener listener) {
     return IndexedStack(
       index: map.containsKey("index") ? map["index"] : 0,
-      alignment: map.containsKey("alignment")
-          ? parseAlignment(map["alignment"])
-          : AlignmentDirectional.topStart,
+      alignment: parseAlignment(map["alignment"]),
       textDirection: map.containsKey("textDirection")
           ? parseTextDirection(map["textDirection"])
           : null,

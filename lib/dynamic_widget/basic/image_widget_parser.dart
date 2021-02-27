@@ -23,9 +23,7 @@ class AssetImageWidgetParser extends WidgetParser {
         map.containsKey('blendMode') ? parseBlendMode(map['blendMode']) : null;
     BoxFit boxFit =
         map.containsKey('boxFit') ? parseBoxFit(map['boxFit']) : null;
-    Alignment alignment = map.containsKey('alignment')
-        ? parseAlignment(map['alignment'])
-        : Alignment.center;
+    Alignment alignment = parseAlignment(map['alignment']);
     ImageRepeat repeat = map.containsKey('repeat')
         ? parseImageRepeat(map['repeat'])
         : ImageRepeat.noRepeat;
@@ -212,9 +210,7 @@ class NetworkImageWidgetParser extends WidgetParser {
         map.containsKey('blendMode') ? parseBlendMode(map['blendMode']) : null;
     BoxFit boxFit =
         map.containsKey('boxFit') ? parseBoxFit(map['boxFit']) : null;
-    Alignment alignment = map.containsKey('alignment')
-        ? parseAlignment(map['alignment'])
-        : Alignment.center;
+    Alignment alignment = parseAlignment(map['alignment']);
     ImageRepeat repeat = map.containsKey('repeat')
         ? parseImageRepeat(map['repeat'])
         : ImageRepeat.noRepeat;

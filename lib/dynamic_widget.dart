@@ -143,7 +143,10 @@ class DynamicWidgetBuilder {
     initDefaultParsersIfNess();
     var parser = _findMatchedWidgetParserForExport(widget);
     if (parser != null) {
-      return parser.export(widget, buildContext);
+      //Clean null values for better reading & parsing speed
+      var map = parser.export(widget, buildContext);
+      map.removeWhere((key, value) => value == null);
+      return map;
     }
     log.warning(
         "Can't find WidgetParser for Type ${widget.runtimeType} to export.");
