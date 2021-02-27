@@ -269,38 +269,44 @@ Map<String, dynamic> exportTextStyle(TextStyle textStyle) {
   };
 }
 
-Alignment parseAlignment(String alignmentString) {
-  Alignment alignment = Alignment.center;
-  switch (alignmentString) {
-    case 'topLeft':
-      alignment = Alignment.topLeft;
-      break;
-    case 'topCenter':
-      alignment = Alignment.topCenter;
-      break;
-    case 'topRight':
-      alignment = Alignment.topRight;
-      break;
-    case 'centerLeft':
-      alignment = Alignment.centerLeft;
-      break;
-    case 'center':
-      alignment = Alignment.center;
-      break;
-    case 'centerRight':
-      alignment = Alignment.centerRight;
-      break;
-    case 'bottomLeft':
-      alignment = Alignment.bottomLeft;
-      break;
-    case 'bottomCenter':
-      alignment = Alignment.bottomCenter;
-      break;
-    case 'bottomRight':
-      alignment = Alignment.bottomRight;
-      break;
+Map<String, dynamic> alignmentEnumMap = {
+  'Alignment.topLeft': Alignment.topLeft,
+  'Alignment.topCenter': Alignment.topCenter,
+  'Alignment.topRight': Alignment.topRight,
+  'Alignment.centerLeft': Alignment.centerLeft,
+  'Alignment.center': Alignment.center,
+  'Alignment.centerRight': Alignment.centerRight,
+  'Alignment.bottomLeft': Alignment.bottomLeft,
+  'Alignment.bottomCenter': Alignment.bottomCenter,
+  'Alignment.bottomRight': Alignment.bottomRight,
+  'AlignmentDirectional.topStart': AlignmentDirectional.topStart,
+  'AlignmentDirectional.topCenter': AlignmentDirectional.topCenter,
+  'AlignmentDirectional.topEnd': AlignmentDirectional.topEnd,
+  'AlignmentDirectional.centerStart': AlignmentDirectional.centerStart,
+  'AlignmentDirectional.center': AlignmentDirectional.center,
+  'AlignmentDirectional.centerEnd': AlignmentDirectional.centerEnd,
+  'AlignmentDirectional.bottomStart': AlignmentDirectional.bottomStart,
+  'AlignmentDirectional.bottomCenter': AlignmentDirectional.bottomCenter,
+  'AlignmentDirectional.bottomEnd': AlignmentDirectional.bottomEnd,
+};
+
+AlignmentGeometry parseAlignment(String alignmentString) {
+  var a = alignmentEnumMap[alignmentString];
+  if (a != null) {
+    return a;
+  } else {
+    bool isAlignmentDirectional =
+        alignmentString.startsWith("AlignmentDirectional");
+    List<double> coords = alignmentString
+        .substring(alignmentString.indexOf('(') + 1, alignmentString.length - 1)
+        .split(',')
+        .map((e) => double.tryParse(e));
+    if (isAlignmentDirectional) {
+      return AlignmentDirectional(coords[0], coords[1]);
+    } else {
+      return Alignment(coords[0], coords[1]);
+    }
   }
-  return alignment;
 }
 
 const double infinity = 9999999999;
@@ -1050,42 +1056,39 @@ Map<String, dynamic> exportDropCap(DropCap dropCap, BuildContext buildContext) {
   };
 }
 
-String exportAlignment(Alignment alignment) {
-  if (alignment == null) {
-    return "center";
-  }
-  if (alignment == Alignment.center) {
-    return "center";
-  }
-  if (alignment == Alignment.bottomRight) {
-    return "bottomRight";
-  }
-  if (alignment == Alignment.bottomCenter) {
-    return "bottomCenter";
-  }
-  if (alignment == Alignment.bottomLeft) {
-    return "bottomLeft";
-  }
-  if (alignment == Alignment.centerLeft) {
-    return "centerLeft";
-  }
-  if (alignment == Alignment.centerRight) {
-    return "centerRight";
-  }
-  if (alignment == Alignment.topCenter) {
-    return "topCenter";
-  }
-  if (alignment == Alignment.topLeft) {
-    return "topLeft";
-  }
-  if (alignment == Alignment.topRight) {
-    return "topRight";
-  }
-  if (alignment == Alignment.bottomRight) {
-    return "bottomRight";
-  }
+Map<AlignmentGeometry, String> exportAlignmentMap = {
+  Alignment.topLeft: "Alignment.topLeft",
+  Alignment.topCenter: "Alignment.topCenter",
+  Alignment.topRight: "Alignment.topRight",
+  Alignment.centerLeft: "Alignment.centerLeft",
+  Alignment.center: "Alignment.center",
+  Alignment.centerRight: "Alignment.centerRight",
+  Alignment.bottomLeft: "Alignment.bottomLeft",
+  Alignment.bottomCenter: "Alignment.bottomCenter",
+  Alignment.bottomRight: "Alignment.bottomRight",
+  AlignmentDirectional.topStart: "AlignmentDirectional.topStart",
+  AlignmentDirectional.topCenter: "AlignmentDirectional.topCenter",
+  AlignmentDirectional.topEnd: "AlignmentDirectional.topEnd",
+  AlignmentDirectional.centerStart: "AlignmentDirectional.centerStart",
+  AlignmentDirectional.center: "AlignmentDirectional.center",
+  AlignmentDirectional.centerEnd: "AlignmentDirectional.centerEnd",
+  AlignmentDirectional.bottomStart: "AlignmentDirectional.bottomStart",
+  AlignmentDirectional.bottomCenter: "AlignmentDirectional.bottomCenter",
+  AlignmentDirectional.bottomEnd: "AlignmentDirectional.bottomEnd",
+};
 
-  return "center";
+String exportAlignment(AlignmentGeometry alignment) {
+  var e = exportAlignmentMap[alignment];
+  if (e != null) {
+    return e;
+  }
+  if (alignment is Alignment) {
+    var a = alignment;
+    return "Alignment(${a.x}, ${a.y})";
+  } else {
+    var a = alignment as AlignmentDirectional;
+    return "AlignmentDirectional(${a.start}, ${a.y})";
+  }
 }
 
 Map<String, dynamic> exportConstraints(BoxConstraints constraints) {
